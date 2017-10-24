@@ -58,6 +58,54 @@ class Newsletter
     }
 
     /**
+     * Add emails to segment
+     *
+     * @param array $emails
+     * @param $segmentId
+     * @param string $listName
+     * @return bool
+     */
+    public function addToSegment(array $emails, $segmentId,  $listName = '')
+    {
+        $list = $this->lists->findByName($listName);
+        if(!$this->enable){
+            return true;
+        }
+
+        $response = $this->mailChimp->post("lists/{$list->getId()}/segments/{$segmentId}",['members_to_add' => $emails]);
+
+        if (! $this->lastActionSucceeded()) {
+            return false;
+        }
+
+        return $response;
+    }
+
+    /**
+     * Remove emails from segment
+     *
+     * @param array $emails
+     * @param $segmentId
+     * @param string $listName
+     * @return bool
+     */
+    public function removeFromSegment(array $emails, $segmentId,  $listName = '')
+    {
+        $list = $this->lists->findByName($listName);
+        if(!$this->enable){
+            return true;
+        }
+
+        $response = $this->mailChimp->post("lists/{$list->getId()}/segments/{$segmentId}",['members_to_remove' => $emails]);
+
+        if (! $this->lastActionSucceeded()) {
+            return false;
+        }
+
+        return $response;
+    }
+
+    /**
      * @param string $email
      * @param array  $mergeFields
      * @param string $listName
