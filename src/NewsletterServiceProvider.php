@@ -27,7 +27,9 @@ class NewsletterServiceProvider extends ServiceProvider
 
             $configuredLists = NewsletterListCollection::createFromConfig(config('laravel-newsletter'));
 
-            return new Newsletter($mailChimp, $configuredLists);
+            $enable = config('laravel-newsletter.enable', true);
+
+            return new Newsletter($mailChimp, $configuredLists, $enable);
         });
 
         $this->app->alias(Newsletter::class, 'laravel-newsletter');
